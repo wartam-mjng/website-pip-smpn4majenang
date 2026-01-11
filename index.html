@@ -3,197 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Program Indonesia Pintar</title>
+    <title>PIP SMP NEGERI 4 MAJENANG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .page { display: none; }
         .page.active { display: block; }
-        .nav-link.active { border-bottom: 2px solid white; }
+        
+        /* Sidebar Transitions */
+        #sidebar {
+            transition: all 0.3s ease-in-out;
+            z-index: 100;
+        }
+        
+        .sidebar-closed {
+            transform: translateX(-100%);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #facc15; /* Yellow accent */
+            color: white;
+        }
+
         .bg-card-gradient {
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
-        @media print {
-            nav, footer, .no-print { display: none !important; }
-            .print-only { display: block !important; }
+
+        /* Overlay when sidebar open on mobile */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 90;
+        }
+
+        @media (min-width: 768px) {
+            #sidebar { transform: translateX(0) !important; }
+            #main-content { margin-left: 260px; }
+            #mobile-header { display: none; }
+            #overlay { display: none !important; }
         }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
-    <!-- Navigation -->
-    <nav class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-graduation-cap text-2xl"></i>
-                <span class="font-bold text-xl tracking-tight">PROGRAM INDONESIA PINTAR SMP NEGERI 4 MAJENANG</span>
-            </div>
-            <div class="hidden md:flex space-x-6">
-                <a href="#" onclick="showPage('home')" class="nav-link active px-2 py-1 transition hover:text-blue-200">Beranda</a>
-                <a href="#" onclick="showPage('info')" class="nav-link px-2 py-1 transition hover:text-blue-200">Informasi</a>
-                <a href="#" onclick="showPage('cek')" class="nav-link px-2 py-1 transition hover:text-blue-200 text-yellow-300 font-bold">Cek Penerima</a>
-            </div>
+    <!-- Overlay -->
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Mobile Header (Updated Title Size) -->
+    <header id="mobile-header" class="bg-blue-700 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-graduation-cap text-2xl text-yellow-400"></i>
+            <span class="font-black text-lg uppercase tracking-tight">PIP SMP N 4 MAJENANG</span>
         </div>
-    </nav>
+        <button onclick="toggleSidebar()" class="text-2xl focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
 
-    <!-- Page: Home -->
-    <main id="home" class="page active">
-        <div class="relative bg-blue-600 h-[450px] flex items-center text-white">
-            <div class="container mx-auto px-4 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-4">Program Indonesia Pintar</h1>
-                <p class="text-xl mb-8 opacity-90">Mewujudkan generasi emas Indonesia melalui bantuan dana pendidikan bagi yang membutuhkan.</p>
-                <button onclick="showPage('cek')" class="bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold hover:bg-yellow-300 transition shadow-lg transform hover:scale-105">Cek Status Penerima</button>
-            </div>
-        </div>
-
-        <section class="container mx-auto px-4 py-16">
-            <div class="grid md:grid-cols-3 gap-8 text-center">
-                <div class="p-8 bg-white rounded-xl shadow-md border-t-4 border-blue-500">
-                    <i class="fas fa-user-check text-4xl text-blue-500 mb-4"></i>
-                    <h3 class="font-bold text-lg mb-2">Tepat Sasaran</h3>
-                    <p class="text-gray-600">Bantuan diberikan kepada siswa dari keluarga tidak mampu sesuai kriteria Kemdikbud.</p>
+    <!-- Sidebar Navigation (Updated Title Size) -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-[260px] bg-blue-800 text-white shadow-2xl sidebar-closed md:translate-x-0 overflow-y-auto">
+        <div class="p-6 border-b border-blue-700">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white p-2 rounded-lg">
+                    <i class="fas fa-graduation-cap text-blue-800 text-2xl"></i>
                 </div>
-                <div class="p-8 bg-white rounded-xl shadow-md border-t-4 border-green-500">
-                    <i class="fas fa-wallet text-4xl text-green-500 mb-4"></i>
-                    <h3 class="font-bold text-lg mb-2">Pencairan Mudah</h3>
-                    <p class="text-gray-600">Dana bantuan dapat dicairkan melalui bank penyalur resmi (BRI/BNI/BSI).</p>
-                </div>
-                <div class="p-8 bg-white rounded-xl shadow-md border-t-4 border-red-500">
-                    <i class="fas fa-id-card text-4xl text-red-500 mb-4"></i>
-                    <h3 class="font-bold text-lg mb-2">Kartu Digital</h3>
-                    <p class="text-gray-600">Cetak bukti penerima secara mandiri sebagai syarat verifikasi sekolah.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Page: Info -->
-    <main id="info" class="page container mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Informasi Program</h2>
-        <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-sm border">
-            <p class="mb-6 leading-relaxed text-gray-700">
-                Program Indonesia Pintar (PIP) dirancang untuk membantu anak-anak usia sekolah agar tetap mendapatkan layanan pendidikan sampai tamat pendidikan menengah.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-blue-50 p-6 rounded-xl text-blue-900">
-                    <h4 class="font-bold mb-3"><i class="fas fa-coins mr-2"></i>Besaran Bantuan</h4>
-                    <ul class="text-sm space-y-2">
-                        <li>SD/MI: Rp 450.000 / thn</li>
-                        <li>SMP/MTs: Rp 750.000 / thn</li>
-                        <li>SMA/SMK: Rp 1.800.000 / thn</li>
-                    </ul>
-                </div>
-                <div class="bg-green-50 p-6 rounded-xl text-green-900">
-                    <h4 class="font-bold mb-3"><i class="fas fa-university mr-2"></i>Bank Penyalur</h4>
-                    <ul class="text-sm space-y-2">
-                        <li>SD & SMP: Bank BRI</li>
-                        <li>SMA & SMK: Bank BNI</li>
-                        <li>Khusus Aceh: Bank BSI</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Page: Cek Penerima -->
-    <main id="cek" class="page container mx-auto px-4 py-12">
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-xl border">
-            <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Cek Status & Kartu PIP</h2>
-            
-            <div class="space-y-4 no-print">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Nomor Induk Siswa Nasional (NISN)</label>
-                    <input type="text" id="nisnInput" placeholder="Masukkan 10 digit NISN" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <h2 class="font-black text-xl leading-tight">PIP</h2>
+                    <p class="text-xs text-blue-200 uppercase tracking-widest font-bold">SMP N 4 MAJENANG</p>
                 </div>
-                <button onclick="searchData()" id="btnCek" class="w-full bg-blue-700 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition flex justify-center items-center">
-                    <span id="btnText">Cari Data</span>
-                </button>
+            </div>
+        </div>
+
+        <nav class="mt-6 px-3 space-y-1">
+            <a href="#" onclick="showPage('home')" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+                <i class="fas fa-home w-5"></i>
+                <span>Beranda</span>
+            </a>
+            <a href="#" onclick="showPage('info')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+                <i class="fas fa-info-circle w-5"></i>
+                <span>Informasi Program</span>
+            </a>
+            <a href="#" onclick="showPage('tabungan')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+                <i class="fas fa-piggy-bank w-5"></i>
+                <span>Cek Tabungan</span>
+            </a>
+            <a href="#" onclick="showPage('biodata')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+                <i class="fas fa-user-edit w-5"></i>
+                <span>Isi Biodata</span>
+            </a>
+
+            <div class="pt-4 pb-2 px-4 uppercase text-[10px] text-blue-400 font-bold tracking-widest">Layanan Utama</div>
+            <a href="#" onclick="showPage('cek')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-yellow-400 hover:text-blue-900 border border-dashed border-blue-400/30">
+                <i class="fas fa-search w-5"></i>
+                <span class="font-bold">Cek Status</span>
+            </a>
+        </nav>
+
+        <div class="absolute bottom-0 w-full p-6 text-center text-[10px] text-blue-300 border-t border-blue-700 bg-blue-800">
+            © 2026 PIP <br> SMP NEGERI 4 MAJENANG
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div id="main-content" class="min-h-screen flex flex-col">
+        
+        <!-- Page: Home (Returned to Previous Size) -->
+        <main id="home" class="page active">
+            <div class="bg-blue-600 p-8 md:p-14 text-white text-center md:text-left relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <h1 class="text-2xl md:text-4xl font-extrabold mb-4 uppercase tracking-tight">PIP SMP NEGERI 4 MAJENANG</h1>
+                    <p class="text-base md:text-lg mb-8 opacity-90 leading-relaxed">Mewujudkan generasi emas Indonesia melalui bantuan dana pendidikan bagi yang membutuhkan di SMP Negeri 4 Majenang.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="showPage('cek')" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold hover:bg-yellow-300 transition shadow-lg text-sm md:text-base">Cek Status Penerima</button>
+                        <button onclick="showPage('tabungan')" class="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-lg font-bold hover:bg-white/20 transition text-sm md:text-base">Informasi Tabungan</button>
+                    </div>
+                </div>
+                <i class="fas fa-graduation-cap absolute -right-10 -bottom-10 text-white/10 text-[200px] md:text-[300px] rotate-12"></i>
             </div>
 
-            <!-- Result Area -->
-            <div id="resultArea" class="mt-8 hidden animate-fade-in">
-                <div class="border-t pt-6">
-                    <div class="flex justify-between items-center mb-4 no-print">
-                        <h3 class="font-bold text-lg text-green-600"><i class="fas fa-check-circle mr-2"></i>Data Ditemukan</h3>
-                        <button onclick="window.print()" class="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">
-                            <i class="fas fa-print mr-1"></i>Cetak
-                        </button>
+            <section class="p-6 md:p-12 grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-user-check text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Tepat Sasaran</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">Bantuan diberikan kepada siswa dari keluarga tidak mampu sesuai kriteria resmi.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 mb-4">
+                        <i class="fas fa-wallet text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Pencairan Mudah</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">Dana dapat dicairkan melalui bank penyalur resmi (BRI) dengan mudah.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+                        <i class="fas fa-id-card text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Kartu Digital</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">Akses kartu digital sebagai bukti informasi penerima secara mandiri.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Page: Info -->
+        <main id="info" class="page p-6 md:p-12">
+            <div class="max-w-4xl">
+                <h2 class="text-3xl font-bold mb-8 text-blue-800">Informasi Program</h2>
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border mb-8">
+                    <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-book-open text-blue-600 mr-3"></i>Tentang PIP</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Program Indonesia Pintar (PIP) dirancang untuk membantu anak-anak usia sekolah agar tetap mendapatkan layanan pendidikan sampai tamat pendidikan menengah. Program ini merupakan bentuk kepedulian pemerintah untuk mencegah putus sekolah.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                        <h4 class="font-bold text-blue-900 mb-4 flex items-center"><i class="fas fa-users mr-2"></i>Kriteria Penerima</h4>
+                        <ul class="text-sm space-y-3 text-blue-800">
+                            <li><i class="fas fa-check-circle mr-2 text-blue-600"></i> Tercantum di DTKS</li>
+                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Pemegang KIP / PKH / KKS</li>
+                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Status yatim/piatu/yatim piatu</li>
+                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Terdampak bencana alam</li>
+                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Terancam putus sekolah</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100">
+                        <h4 class="font-bold text-yellow-900 mb-4 flex items-center"><i class="fas fa-shopping-bag mr-2"></i>Penggunaan Dana</h4>
+                        <ul class="text-sm space-y-3 text-yellow-800">
+                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Buku dan alat tulis</li>
+                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Seragam dan perlengkapan</li>
+                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Transportasi sekolah</li>
+                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Biaya kursus/praktik</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Page: Tabungan -->
+        <main id="tabungan" class="page p-6 md:p-12">
+            <h2 class="text-3xl font-bold mb-8 text-blue-800">Tabungan Siswa</h2>
+            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden max-w-4xl">
+                <div class="p-8 md:p-12">
+                    <div class="flex flex-col md:flex-row gap-8 items-center mb-10">
+                        <div class="bg-pink-50 w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center shrink-0">
+                            <i class="fas fa-piggy-bank text-5xl md:text-6xl text-pink-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-blue-900 leading-tight">Mari Gemar Menabung!</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Sesuai dengan program penguatan karakter di SMP Negeri 4 Majenang, kami memfasilitasi siswa untuk belajar mengelola keuangan sejak dini. Menabung melatih kedisiplinan dan membantu merencanakan masa depan.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-10">
+                        <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 flex space-x-4">
+                            <i class="fas fa-shield-alt text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-sm text-blue-900 mb-1">Keamanan Data</h4>
+                                <p class="text-xs text-gray-500">Data dicatat digital & manual untuk menjamin transparansi saldo siswa.</p>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 flex space-x-4">
+                            <i class="fas fa-clock text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-sm text-blue-900 mb-1">Pembaruan Data</h4>
+                                <p class="text-xs text-gray-500">Saldo diperbarui berkala sesuai validasi petugas bendahara.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="https://smpn4majenang.github.io/tabungan_siswa/" target="_blank" class="inline-block bg-blue-700 text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-800 transition shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-search mr-2"></i>Cek Saldo Tabungan Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Page: Biodata -->
+        <main id="biodata" class="page p-6 md:p-12">
+            <h2 class="text-3xl font-bold mb-8 text-blue-800">Biodata Siswa</h2>
+            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden max-w-4xl">
+                <div class="p-8 md:p-12">
+                    <div class="flex flex-col md:flex-row gap-8 items-center mb-10">
+                        <div class="bg-blue-50 w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center shrink-0">
+                            <i class="fas fa-address-card text-5xl md:text-6xl text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-blue-900 leading-tight">Lengkapi Data Dirimu</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Pengisian biodata sangat penting untuk memastikan akurasi data administrasi sekolah dan keperluan sinkronisasi Program Indonesia Pintar (PIP). Pastikan data yang diisi valid dan sesuai dengan dokumen resmi.
+                            </p>
+                        </div>
                     </div>
 
-                    <!-- Kartu Digital Design -->
-                    <div class="bg-card-gradient p-6 rounded-2xl text-white shadow-lg relative overflow-hidden">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-graduation-cap text-2xl text-yellow-400"></i>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100 mb-10">
+                        <h4 class="font-bold text-gray-800 mb-4">Instruksi Pengisian:</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</div>
+                                <p class="text-sm text-gray-600">Siapkan bukti dukung sebelum mengisi.</p>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</div>
+                                <p class="text-sm text-gray-600">Isi setiap bidang pertanyaan dengan teliti.</p>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</div>
+                                <p class="text-sm text-gray-600">Klik tombol simpan atau kirim di akhir formulir untuk memastikan data tersimpan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="https://wartam-mjng.github.io/biodata/" target="_blank" class="inline-block bg-green-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 transition shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-external-link-alt mr-2"></i>Buka Formulir Biodata
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Page: Cek Penerima -->
+        <main id="cek" class="page p-6 md:p-12">
+            <div class="max-w-2xl">
+                <h2 class="text-3xl font-bold mb-4 text-blue-800">Cek Status</h2>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">NISN Siswa</label>
+                        <input type="text" id="nisnInput" maxlength="10" placeholder="Contoh: 0098765432" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono text-lg transition">
+                    </div>
+                    <button onclick="searchData()" id="btnCek" class="w-full bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 transition shadow-lg">
+                        Cari Data
+                    </button>
+
+                    <div id="resultArea" class="mt-8 hidden animate-fade-in border-t pt-8">
+                        <div class="bg-card-gradient p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
+                            <div class="flex justify-between items-start mb-10">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-graduation-cap text-3xl text-yellow-400"></i>
+                                    <div>
+                                        <p class="font-bold text-base leading-none tracking-widest uppercase">KARTU PIP</p>
+                                        <p class="text-[9px] opacity-80 uppercase font-medium">SMP NEGERI 4 MAJENANG</p>
+                                    </div>
+                                </div>
+                                <div id="resTahun" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded-lg text-xs font-bold shadow-sm">2024</div>
+                            </div>
+                            <div class="mb-6">
+                                <p class="text-[10px] opacity-70 tracking-widest font-bold">NAMA LENGKAP</p>
+                                <p id="resNama" class="font-bold text-xl md:text-2xl tracking-wide uppercase truncate">-</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p class="font-bold text-sm leading-none">KARTU PIP</p>
-                                    <p class="text-[8px] opacity-80 uppercase">Kementerian Pendidikan dan Kebudayaan</p>
+                                    <p class="text-[10px] opacity-70 tracking-widest font-bold">NISN</p>
+                                    <p id="resNISN" class="font-mono text-lg font-bold tracking-tighter">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] opacity-70 tracking-widest font-bold">STATUS</p>
+                                    <p id="resStatus" class="text-yellow-300 text-lg font-bold uppercase truncate">-</p>
                                 </div>
                             </div>
-                            <span id="resTahun" class="bg-yellow-400 text-blue-900 px-2 py-0.5 rounded text-[10px] font-bold">2024</span>
+                            <div class="mt-6 pt-4 border-t border-white/20 text-[10px] italic opacity-80" id="resSekolah">-</div>
                         </div>
-                        
-                        <div class="mb-4">
-                            <p class="text-[10px] opacity-70">NAMA LENGKAP</p>
-                            <p id="resNama" class="font-bold text-lg tracking-wide uppercase">-</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <p class="text-[10px] opacity-70">NISN</p>
-                                <p id="resNISN" class="font-mono text-sm font-bold">-</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] opacity-70">STATUS</p>
-                                <p id="resStatus" class="text-yellow-300 text-sm font-bold uppercase">-</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 pt-3 border-t border-white/20">
-                            <p id="resSekolah" class="text-[10px] italic opacity-90 truncate">-</p>
-                        </div>
-                        
-                        <!-- Watermark -->
-                        <i class="fas fa-graduation-cap absolute -right-4 -bottom-4 text-white/10 text-8xl"></i>
                     </div>
 
-                    <div class="mt-4 p-4 bg-blue-50 rounded-lg text-xs text-blue-800 no-print">
-                        <strong>Catatan:</strong> Gunakan kartu digital ini sebagai informasi untuk penerima PIP di SMP Negeri 4 Majenang.
+                    <div id="notFoundArea" class="mt-8 hidden text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 font-bold">
+                        Data Tidak Ditemukan
                     </div>
                 </div>
             </div>
+        </main>
 
-            <div id="notFoundArea" class="mt-8 hidden text-center p-6 bg-red-50 rounded-lg text-red-600 no-print">
-                <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
-                <p>Maaf, NISN tidak ditemukan. Pastikan nomor yang dimasukkan benar.</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-10 mt-20 no-print">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-2">© 2024 SIP-PIP. Sistem Informasi Terpadu.</p>
-            <p class="text-xs">Data diproses secara aman menggunakan Google Sheets API</p>
-        </div>
-    </footer>
+        <div class="flex-grow"></div>
+        <footer class="bg-gray-100 p-6 text-center text-xs text-gray-500 md:hidden mt-auto">
+             © 2026 PIP SMP NEGERI 4 MAJENANG
+        </footer>
+    </div>
 
     <script>
-        // Ganti URL ini dengan URL CSV Google Sheet Anda
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSXLaQHuC9r6f27r1nUhUG9AB9bgXR4SiUdbT9NOHD3xmxwK_vBzb_ff00SXQruU5NrYCWcQnmSWF60/pub?output=csv'; 
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('sidebar-closed');
             
-            // Link styling
-            document.querySelectorAll('.nav-link').forEach(l => {
+            if (!sidebar.classList.contains('sidebar-closed')) {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function showPage(pageId) {
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('sidebar-closed');
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            document.querySelectorAll('.nav-item').forEach(l => {
                 l.classList.remove('active');
-                if(l.innerText.toLowerCase() === pageId || (pageId === 'home' && l.innerText.toLowerCase() === 'beranda')) {
+                const text = l.innerText.toLowerCase();
+                if (pageId === 'cek' && text.includes('cek status')) {
+                    l.classList.add('active');
+                } else if (pageId === 'biodata' && text.includes('isi biodata')) {
+                    l.classList.add('active');
+                } else if (pageId === 'home' && text.includes('beranda')) {
+                    l.classList.add('active');
+                } else if (text.includes(pageId)) {
                     l.classList.add('active');
                 }
             });
-            
             window.scrollTo(0,0);
         }
 
@@ -209,21 +382,17 @@
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mencari...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
             resArea.classList.add('hidden');
             errorArea.classList.add('hidden');
 
             try {
                 const response = await fetch(SHEET_CSV_URL);
                 const dataText = await response.text();
-                // Parsing baris dan membersihkan spasi/karakter newline yang tidak terlihat
                 const rows = dataText.split(/\r?\n/).map(row => row.split(','));
-                
-                // Cari NISN (Kolom 0)
                 const found = rows.find(r => r[0] && r[0].trim() === nisn);
 
                 if (found) {
-                    // Gunakan .trim() pada setiap elemen agar karakter 'hidden' tidak merusak tampilan
                     document.getElementById('resNISN').innerText = found[0].trim();
                     document.getElementById('resNama').innerText = found[1].trim();
                     document.getElementById('resSekolah').innerText = found[2].trim();
@@ -235,7 +404,7 @@
                 }
             } catch (error) {
                 console.error(error);
-                alert("Koneksi gagal. Pastikan link Google Sheet benar.");
+                alert("Gagal memuat data.");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Cari Data';
