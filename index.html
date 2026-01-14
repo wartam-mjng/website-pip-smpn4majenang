@@ -10,7 +10,6 @@
         .page { display: none; }
         .page.active { display: block; }
         
-        /* Sidebar Transitions */
         #sidebar {
             transition: all 0.3s ease-in-out;
             z-index: 100;
@@ -22,25 +21,47 @@
         
         .nav-item.active {
             background-color: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #facc15; /* Yellow accent */
+            border-left: 4px solid #facc15;
             color: white;
+        }
+
+        /* Gaya untuk menu yang terkunci */
+        .nav-locked {
+            opacity: 0.4 !important;
+            cursor: not-allowed !important;
+            filter: grayscale(1) !important;
+            pointer-events: none !important;
+            position: relative;
+        }
+        
+        .nav-locked::after {
+            content: "\f023";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            font-size: 10px;
+            color: #facc15;
         }
 
         .bg-card-gradient {
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
 
-        /* Overlay when sidebar open on mobile */
         #overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5);
             z-index: 90;
         }
+
+        @keyframes pulse-custom {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .btn-pulse { animation: pulse-custom 2s infinite; }
 
         @media (min-width: 768px) {
             #sidebar { transform: translateX(0) !important; }
@@ -52,10 +73,9 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
-    <!-- Overlay -->
     <div id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Mobile Header (Updated Title Size) -->
+    <!-- Header Mobile -->
     <header id="mobile-header" class="bg-blue-700 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div class="flex items-center space-x-3">
             <i class="fas fa-graduation-cap text-2xl text-yellow-400"></i>
@@ -66,7 +86,7 @@
         </button>
     </header>
 
-    <!-- Sidebar Navigation (Updated Title Size) -->
+    <!-- Sidebar -->
     <aside id="sidebar" class="fixed top-0 left-0 h-screen w-[260px] bg-blue-800 text-white shadow-2xl sidebar-closed md:translate-x-0 overflow-y-auto">
         <div class="p-6 border-b border-blue-700">
             <div class="flex items-center space-x-3">
@@ -80,331 +100,348 @@
             </div>
         </div>
 
-        <nav class="mt-6 px-3 space-y-1">
-            <a href="#" onclick="showPage('home')" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+        <nav id="main-nav" class="mt-6 px-3 space-y-1">
+            <a href="javascript:void(0)" id="nav-home" onclick="showPage('home')" class="nav-item nav-locked flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
                 <i class="fas fa-home w-5"></i>
                 <span>Beranda</span>
             </a>
-            <a href="#" onclick="showPage('info')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+            <a href="javascript:void(0)" id="nav-info" onclick="showPage('info')" class="nav-item nav-locked flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
                 <i class="fas fa-info-circle w-5"></i>
                 <span>Informasi Program</span>
             </a>
-            <a href="#" onclick="showPage('tabungan')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+            <a href="javascript:void(0)" id="nav-tabungan" onclick="showPage('tabungan')" class="nav-item nav-locked flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
                 <i class="fas fa-piggy-bank w-5"></i>
                 <span>Cek Tabungan</span>
             </a>
-            <a href="#" onclick="showPage('biodata')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
+            <a href="javascript:void(0)" id="nav-biodata" onclick="showPage('biodata')" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-white/5">
                 <i class="fas fa-user-edit w-5"></i>
                 <span>Isi Biodata</span>
             </a>
 
             <div class="pt-4 pb-2 px-4 uppercase text-[10px] text-blue-400 font-bold tracking-widest">Layanan Utama</div>
-            <a href="#" onclick="showPage('cek')" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-yellow-400 hover:text-blue-900 border border-dashed border-blue-400/30">
+            <a href="javascript:void(0)" id="nav-cek" onclick="showPage('cek')" class="nav-item nav-locked flex items-center space-x-3 px-4 py-3 rounded-lg transition hover:bg-yellow-400 hover:text-blue-900 border border-dashed border-blue-400/30">
                 <i class="fas fa-search w-5"></i>
                 <span class="font-bold">Cek Status</span>
             </a>
         </nav>
-
-        <div class="absolute bottom-0 w-full p-6 text-center text-[10px] text-blue-300 border-t border-blue-700 bg-blue-800">
-            © 2026 PIP <br> SMP NEGERI 4 MAJENANG
-        </div>
     </aside>
 
-    <!-- Main Content Area -->
     <div id="main-content" class="min-h-screen flex flex-col">
         
-        <!-- Page: Home (Returned to Previous Size) -->
-        <main id="home" class="page active">
-            <div class="bg-blue-600 p-8 md:p-14 text-white text-center md:text-left relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl">
+        <!-- HALAMAN: BIODATA (VALIDASI NISN) -->
+        <main id="biodata" class="page active p-6 md:p-12">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-8 text-blue-800">Verifikasi Biodata</h2>
+                
+                <div class="bg-white rounded-3xl shadow-xl border overflow-hidden">
+                    <div class="p-8 md:p-12">
+                        <div class="flex flex-col md:flex-row gap-8 items-center mb-10">
+                            <div class="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fas fa-user-lock text-4xl text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-blue-900">Akses Terkunci</h3>
+                                <p class="text-xs text-gray-500">Silakan isi Biodata terlebih dahulu agar bisa membuka menu yang lain</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold mb-3 inline-block">LANGKAH 1</span>
+                                <h4 class="font-bold text-sm mb-1 uppercase tracking-tight">Isi Formulir</h4>
+                                <p class="text-xs text-gray-500 mb-5">Jika belum pernah mengisi biodata, silakan klik tombol di bawah. Sebelum mengisi siapkan Nomor Induk Siswa (NIS) dan Nomor Induk Siswa Nasional (NISN) anda!</p>
+                                <a href="https://wartam-mjng.github.io/biodata/" target="_blank" class="block w-full text-center bg-green-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-green-700 transition shadow-lg btn-pulse">
+                                    <i class="fas fa-external-link-alt mr-2 text-xs"></i>Buka Link Biodata
+                                </a>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-200">
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold mb-3 inline-block">LANGKAH 2</span>
+                                <h4 class="font-bold text-sm mb-1 uppercase tracking-tight">Validasi NISN</h4>
+                                <p class="text-xs text-gray-500 mb-3">Masukkan 10 digit NISN Anda untuk membuka kunci menu.</p>
+                                <div class="space-y-3">
+                                    <input type="text" id="valNisn" maxlength="10" placeholder="Contoh: 0123456789" class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none font-mono">
+                                    <button onclick="validateSiswa()" id="btnValidate" class="w-full bg-blue-700 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-blue-800 transition">
+                                        Validasi & Buka Menu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Halaman: Beranda -->
+        <main id="home" class="page">
+            <div class="bg-blue-600 p-8 md:p-14 text-white relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl animate-fade-in">
                     <h1 class="text-2xl md:text-4xl font-extrabold mb-4 uppercase tracking-tight">PIP SMP NEGERI 4 MAJENANG</h1>
-                    <p class="text-base md:text-lg mb-8 opacity-90 leading-relaxed">Mewujudkan generasi emas Indonesia melalui bantuan dana pendidikan bagi yang membutuhkan di SMP Negeri 4 Majenang.</p>
+                    <p class="text-base md:text-lg mb-8 opacity-90 leading-relaxed">Selamat datang! Seluruh fitur layanan digital kini sudah dapat Anda akses sepenuhnya.</p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <button onclick="showPage('cek')" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold hover:bg-yellow-300 transition shadow-lg text-sm md:text-base">Cek Status Penerima</button>
-                        <button onclick="showPage('tabungan')" class="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-lg font-bold hover:bg-white/20 transition text-sm md:text-base">Informasi Tabungan</button>
+                        <button onclick="showPage('cek')" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold shadow-lg hover:bg-yellow-300 transition">Cek Status Penerima</button>
                     </div>
                 </div>
                 <i class="fas fa-graduation-cap absolute -right-10 -bottom-10 text-white/10 text-[200px] md:text-[300px] rotate-12"></i>
             </div>
-
-            <section class="p-6 md:p-12 grid md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-                        <i class="fas fa-user-check text-xl"></i>
+            
+            <section class="p-6 md:p-12 grid md:grid-cols-2 gap-6">
+                <div onclick="showPage('tabungan')" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 hover:border-blue-300 transition-all flex items-center space-x-4">
+                    <div class="bg-pink-100 p-4 rounded-xl text-pink-600"><i class="fas fa-piggy-bank text-2xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-blue-900">Tabungan Digital</h4>
+                        <p class="text-xs text-gray-500">Lihat saldo tabungan sekolah Anda.</p>
                     </div>
-                    <h3 class="font-bold text-lg mb-2">Tepat Sasaran</h3>
-                    <p class="text-sm text-gray-600 leading-relaxed">Bantuan diberikan kepada siswa dari keluarga tidak mampu sesuai kriteria resmi.</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 mb-4">
-                        <i class="fas fa-wallet text-xl"></i>
+                <div onclick="showPage('cek')" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 hover:border-blue-300 transition-all flex items-center space-x-4">
+                    <div class="bg-blue-100 p-4 rounded-xl text-blue-600"><i class="fas fa-search text-2xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-blue-900">Cek Status</h4>
+                        <p class="text-xs text-gray-500">Cek informasi terkait bantuan yang Anda dapatkan</p>
                     </div>
-                    <h3 class="font-bold text-lg mb-2">Pencairan Mudah</h3>
-                    <p class="text-sm text-gray-600 leading-relaxed">Dana dapat dicairkan melalui bank penyalur resmi (BRI) dengan mudah.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
-                        <i class="fas fa-id-card text-xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Kartu Digital</h3>
-                    <p class="text-sm text-gray-600 leading-relaxed">Akses kartu digital sebagai bukti informasi penerima secara mandiri.</p>
                 </div>
             </section>
         </main>
 
-        <!-- Page: Info -->
+        <!-- Halaman: Informasi -->
         <main id="info" class="page p-6 md:p-12">
-            <div class="max-w-4xl">
-                <h2 class="text-3xl font-bold mb-8 text-blue-800">Informasi Program</h2>
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border mb-8">
-                    <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-book-open text-blue-600 mr-3"></i>Tentang PIP</h3>
-                    <p class="text-gray-700 leading-relaxed">
-                        Program Indonesia Pintar (PIP) dirancang untuk membantu anak-anak usia sekolah agar tetap mendapatkan layanan pendidikan sampai tamat pendidikan menengah. Program ini merupakan bentuk kepedulian pemerintah untuk mencegah putus sekolah.
-                    </p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                        <h4 class="font-bold text-blue-900 mb-4 flex items-center"><i class="fas fa-users mr-2"></i>Kriteria Penerima</h4>
-                        <ul class="text-sm space-y-3 text-blue-800">
-                            <li><i class="fas fa-check-circle mr-2 text-blue-600"></i> Tercantum di DTKS</li>
-                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Pemegang KIP / PKH / KKS</li>
-                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Status yatim/piatu/yatim piatu</li>
-                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Terdampak bencana alam</li>
-                            <li><i class="fas fa-check-circle mr-2 opacity-50"></i> Terancam putus sekolah</li>
-                        </ul>
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-8 text-blue-800">Informasi Program PIP</h2>
+                
+                <div class="space-y-6">
+                    <!-- Tentang PIP -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <i class="fas fa-info-circle text-blue-600 text-xl"></i>
+                            <h3 class="text-lg font-bold text-blue-900">Tentang PIP</h3>
+                        </div>
+                        <p class="text-gray-700 text-sm leading-relaxed">
+                            Program Indonesia Pintar (PIP) dirancang untuk membantu anak-anak usia sekolah agar tetap mendapatkan layanan pendidikan sampai tamat pendidikan menengah. Program ini merupakan bentuk kepedulian pemerintah untuk mencegah putus sekolah.
+                        </p>
                     </div>
-                    <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100">
-                        <h4 class="font-bold text-yellow-900 mb-4 flex items-center"><i class="fas fa-shopping-bag mr-2"></i>Penggunaan Dana</h4>
-                        <ul class="text-sm space-y-3 text-yellow-800">
-                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Buku dan alat tulis</li>
-                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Seragam dan perlengkapan</li>
-                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Transportasi sekolah</li>
-                            <li><i class="fas fa-dot-circle mr-2 opacity-50"></i> Biaya kursus/praktik</li>
-                        </ul>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Kriteria Penerima -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i class="fas fa-user-check text-green-600 text-xl"></i>
+                                <h3 class="text-lg font-bold text-blue-900">Kriteria Penerima</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-check-circle text-green-500 mr-3"></i> Tercantum di DTKS
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-check-circle text-green-500 mr-3"></i> Pemegang KIP / PKH / KKS
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-check-circle text-green-500 mr-3"></i> Status yatim/piatu/yatim piatu
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-check-circle text-green-500 mr-3"></i> Terdampak bencana alam
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-check-circle text-green-500 mr-3"></i> Terancam putus sekolah
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Penggunaan Dana -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i class="fas fa-shopping-bag text-orange-600 text-xl"></i>
+                                <h3 class="text-lg font-bold text-blue-900">Penggunaan Dana</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-circle text-[8px] text-orange-400 mr-3"></i> Buku dan alat tulis
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-circle text-[8px] text-orange-400 mr-3"></i> Seragam dan perlengkapan
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-circle text-[8px] text-orange-400 mr-3"></i> Transportasi sekolah
+                                </li>
+                                <li class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-circle text-[8px] text-orange-400 mr-3"></i> Biaya kursus/praktik
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Page: Tabungan -->
+        <!-- Halaman: Tabungan -->
         <main id="tabungan" class="page p-6 md:p-12">
             <h2 class="text-3xl font-bold mb-8 text-blue-800">Tabungan Siswa</h2>
-            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden max-w-4xl">
-                <div class="p-8 md:p-12">
-                    <div class="flex flex-col md:flex-row gap-8 items-center mb-10">
-                        <div class="bg-pink-50 w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center shrink-0">
-                            <i class="fas fa-piggy-bank text-5xl md:text-6xl text-pink-500"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-3 text-blue-900 leading-tight">Mari Gemar Menabung!</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                Sesuai dengan program penguatan karakter di SMP Negeri 4 Majenang, kami memfasilitasi siswa untuk belajar mengelola keuangan sejak dini. Menabung melatih kedisiplinan dan membantu merencanakan masa depan.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-6 mb-10">
-                        <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 flex space-x-4">
-                            <i class="fas fa-shield-alt text-2xl text-blue-600 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-sm text-blue-900 mb-1">Keamanan Data</h4>
-                                <p class="text-xs text-gray-500">Data dicatat digital & manual untuk menjamin transparansi saldo siswa.</p>
-                            </div>
-                        </div>
-                        <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 flex space-x-4">
-                            <i class="fas fa-clock text-2xl text-blue-600 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-sm text-blue-900 mb-1">Pembaruan Data</h4>
-                                <p class="text-xs text-gray-500">Saldo diperbarui berkala sesuai validasi petugas bendahara.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <a href="https://smpn4majenang.github.io/tabungan_siswa/" target="_blank" class="inline-block bg-blue-700 text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-800 transition shadow-xl hover:-translate-y-1">
-                            <i class="fas fa-search mr-2"></i>Cek Saldo Tabungan Sekarang
-                        </a>
-                    </div>
-                </div>
+            <div class="bg-white rounded-3xl shadow-sm border p-8 md:p-12 max-w-2xl text-center mx-auto">
+                <i class="fas fa-piggy-bank text-6xl text-pink-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Layanan Tabungan Digital</h3>
+                <p class="text-gray-600 mb-8">Klik tombol di bawah untuk membuka tabungan siswa.</p>
+                <a href="https://smpn4majenang.github.io/tabungan_siswa/" target="_blank" class="inline-block bg-blue-700 text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-800 transition">Buka Dashboard Tabungan</a>
             </div>
         </main>
 
-        <!-- Page: Biodata -->
-        <main id="biodata" class="page p-6 md:p-12">
-            <h2 class="text-3xl font-bold mb-8 text-blue-800">Biodata Siswa</h2>
-            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden max-w-4xl">
-                <div class="p-8 md:p-12">
-                    <div class="flex flex-col md:flex-row gap-8 items-center mb-10">
-                        <div class="bg-blue-50 w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center shrink-0">
-                            <i class="fas fa-address-card text-5xl md:text-6xl text-blue-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-3 text-blue-900 leading-tight">Lengkapi Data Dirimu</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                Pengisian biodata sangat penting untuk memastikan akurasi data administrasi sekolah dan keperluan sinkronisasi Program Indonesia Pintar (PIP). Pastikan data yang diisi valid dan sesuai dengan dokumen resmi.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100 mb-10">
-                        <h4 class="font-bold text-gray-800 mb-4">Instruksi Pengisian:</h4>
-                        <div class="space-y-4">
-                            <div class="flex items-start space-x-4">
-                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</div>
-                                <p class="text-sm text-gray-600">Siapkan bukti dukung sebelum mengisi.</p>
-                            </div>
-                            <div class="flex items-start space-x-4">
-                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</div>
-                                <p class="text-sm text-gray-600">Isi setiap bidang pertanyaan dengan teliti.</p>
-                            </div>
-                            <div class="flex items-start space-x-4">
-                                <div class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</div>
-                                <p class="text-sm text-gray-600">Klik tombol simpan atau kirim di akhir formulir untuk memastikan data tersimpan.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center">
-                        <a href="https://wartam-mjng.github.io/biodata/" target="_blank" class="inline-block bg-green-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 transition shadow-xl hover:-translate-y-1">
-                            <i class="fas fa-external-link-alt mr-2"></i>Buka Formulir Biodata
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Page: Cek Penerima -->
+        <!-- Halaman: Cek Status -->
         <main id="cek" class="page p-6 md:p-12">
-            <div class="max-w-2xl">
-                <h2 class="text-3xl font-bold mb-4 text-blue-800">Cek Status</h2>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border space-y-6">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">NISN Siswa</label>
-                        <input type="text" id="nisnInput" maxlength="10" placeholder="Contoh: 0098765432" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono text-lg transition">
-                    </div>
-                    <button onclick="searchData()" id="btnCek" class="w-full bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 transition shadow-lg">
-                        Cari Data
-                    </button>
-
-                    <div id="resultArea" class="mt-8 hidden animate-fade-in border-t pt-8">
-                        <div class="bg-card-gradient p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
-                            <div class="flex justify-between items-start mb-10">
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-graduation-cap text-3xl text-yellow-400"></i>
-                                    <div>
-                                        <p class="font-bold text-base leading-none tracking-widest uppercase">KARTU PIP</p>
-                                        <p class="text-[9px] opacity-80 uppercase font-medium">SMP NEGERI 4 MAJENANG</p>
-                                    </div>
-                                </div>
-                                <div id="resTahun" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded-lg text-xs font-bold shadow-sm">2024</div>
-                            </div>
-                            <div class="mb-6">
-                                <p class="text-[10px] opacity-70 tracking-widest font-bold">NAMA LENGKAP</p>
-                                <p id="resNama" class="font-bold text-xl md:text-2xl tracking-wide uppercase truncate">-</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-[10px] opacity-70 tracking-widest font-bold">NISN</p>
-                                    <p id="resNISN" class="font-mono text-lg font-bold tracking-tighter">-</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] opacity-70 tracking-widest font-bold">STATUS</p>
-                                    <p id="resStatus" class="text-yellow-300 text-lg font-bold uppercase truncate">-</p>
-                                </div>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-white/20 text-[10px] italic opacity-80" id="resSekolah">-</div>
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl font-bold mb-4 text-blue-800">Cek Status Penerima</h2>
+                <div class="bg-white p-8 rounded-3xl shadow-xl border space-y-6">
+                    <input type="text" id="nisnInput" maxlength="10" placeholder="Masukkan 10 digit NISN..." class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-2xl font-mono text-xl outline-none">
+                    <button onclick="searchData()" id="btnCek" class="w-full bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-800 transition shadow-lg">Cari Data</button>
+                    <div id="resultArea" class="mt-10 hidden space-y-4">
+                        <div class="bg-card-gradient p-8 rounded-3xl text-white shadow-2xl">
+                             <p id="resNama" class="font-bold text-2xl uppercase">-</p>
+                             <p id="resStatus" class="font-black text-xl text-yellow-300 mt-4">-</p>
                         </div>
-                    </div>
-
-                    <div id="notFoundArea" class="mt-8 hidden text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 font-bold">
-                        Data Tidak Ditemukan
                     </div>
                 </div>
             </div>
         </main>
 
-        <div class="flex-grow"></div>
-        <footer class="bg-gray-100 p-6 text-center text-xs text-gray-500 md:hidden mt-auto">
+        <footer class="bg-gray-100 p-6 text-center text-xs text-gray-500 mt-auto">
              © 2026 PIP SMP NEGERI 4 MAJENANG
         </footer>
     </div>
 
     <script>
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSXLaQHuC9r6f27r1nUhUG9AB9bgXR4SiUdbT9NOHD3xmxwK_vBzb_ff00SXQruU5NrYCWcQnmSWF60/pub?output=csv'; 
+        const BASE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSXLaQHuC9r6f27r1nUhUG9AB9bgXR4SiUdbT9NOHD3xmxwK_vBzb_ff00SXQruU5NrYCWcQnmSWF60/pub?output=csv'; 
+        const GID_BIODATA = '1543225125'; 
+        const GID_UTAMA = '0'; 
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('sidebar-closed');
-            
-            if (!sidebar.classList.contains('sidebar-closed')) {
-                overlay.style.display = 'block';
+        function checkStatus() {
+            const status = localStorage.getItem('pip_unlocked');
+            if (status === 'true') {
+                applyUnlock();
+                showPage('home');
             } else {
-                overlay.style.display = 'none';
+                isUnlocked = false; 
+                showPage('biodata');
             }
         }
 
-        function showPage(pageId) {
-            if (window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.add('sidebar-closed');
-                document.getElementById('overlay').style.display = 'none';
+        let isUnlocked = false;
+
+        window.onload = checkStatus;
+
+        async function validateSiswa() {
+            const nisnVal = document.getElementById('valNisn').value.trim();
+            const btn = document.getElementById('btnValidate');
+            
+            if (nisnVal.length < 10) { 
+                alert("Harap masukkan 10 digit NISN!"); 
+                return; 
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Validasi...';
+
+            try {
+                const response = await fetch(`${BASE_CSV_URL}&gid=${GID_BIODATA}&t=${new Date().getTime()}`);
+                const dataText = await response.text();
+                const rows = dataText.split(/\r?\n/).map(row => row.split(','));
+                
+                const found = rows.find(r => r[0] && r[0].trim() === nisnVal);
+
+                if (found) {
+                    localStorage.setItem('pip_unlocked', 'true');
+                    isUnlocked = true;
+                    applyUnlock();
+                    showPage('home');
+                    showToast("✅ Berhasil! Akses menu terbuka.");
+                } else {
+                    alert("❌ NISN tidak ditemukan! Silakan isi biodata terlebih dahulu.");
+                }
+            } catch (e) { 
+                alert("⚠️ Gagal memuat database. Periksa koneksi internet Anda."); 
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Validasi & Buka Menu';
+            }
+        }
+
+        function applyUnlock() {
+            isUnlocked = true;
+            document.querySelectorAll('.nav-item').forEach(item => { 
+                item.classList.remove('nav-locked'); 
+            });
+        }
+
+        function showPage(id) {
+            if (!isUnlocked && id !== 'biodata') {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('biodata').classList.add('active');
+                showToast("🔒 Akses Terkunci! Verifikasi NISN dahulu.");
+                return;
             }
 
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
+
             document.querySelectorAll('.nav-item').forEach(l => {
                 l.classList.remove('active');
-                const text = l.innerText.toLowerCase();
-                if (pageId === 'cek' && text.includes('cek status')) {
-                    l.classList.add('active');
-                } else if (pageId === 'biodata' && text.includes('isi biodata')) {
-                    l.classList.add('active');
-                } else if (pageId === 'home' && text.includes('beranda')) {
-                    l.classList.add('active');
-                } else if (text.includes(pageId)) {
-                    l.classList.add('active');
-                }
+                if (l.id === `nav-${id}`) l.classList.add('active');
             });
+
+            if (window.innerWidth < 768) toggleSidebar(true);
             window.scrollTo(0,0);
+        }
+
+        function toggleSidebar(forceClose = false) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            if (forceClose) { 
+                sidebar.classList.add('sidebar-closed'); 
+                overlay.style.display = 'none'; 
+            } else { 
+                sidebar.classList.toggle('sidebar-closed'); 
+                overlay.style.display = sidebar.classList.contains('sidebar-closed') ? 'none' : 'block'; 
+            }
+        }
+
+        function showToast(text) {
+            const existing = document.getElementById('custom-toast');
+            if(existing) existing.remove();
+
+            const t = document.createElement('div');
+            t.id = 'custom-toast';
+            t.className = "fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-900 text-white px-6 py-3 rounded-full shadow-2xl z-[200] font-bold text-sm text-center";
+            t.innerText = text;
+            document.body.appendChild(t);
+            setTimeout(() => { 
+                t.style.opacity = '0'; 
+                t.style.transition = 'opacity 0.5s ease'; 
+                setTimeout(() => t.remove(), 500); 
+            }, 3000);
         }
 
         async function searchData() {
             const nisn = document.getElementById('nisnInput').value.trim();
             const btn = document.getElementById('btnCek');
             const resArea = document.getElementById('resultArea');
-            const errorArea = document.getElementById('notFoundArea');
-
-            if(!nisn) {
-                alert("Silakan masukkan NISN!");
-                return;
-            }
+            if(!nisn) return;
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-            resArea.classList.add('hidden');
-            errorArea.classList.add('hidden');
+            btn.innerHTML = 'Mencari...';
 
             try {
-                const response = await fetch(SHEET_CSV_URL);
+                const response = await fetch(`${BASE_CSV_URL}&gid=${GID_UTAMA}&t=${new Date().getTime()}`);
                 const dataText = await response.text();
                 const rows = dataText.split(/\r?\n/).map(row => row.split(','));
                 const found = rows.find(r => r[0] && r[0].trim() === nisn);
-
+                
                 if (found) {
-                    document.getElementById('resNISN').innerText = found[0].trim();
-                    document.getElementById('resNama').innerText = found[1].trim();
-                    document.getElementById('resSekolah').innerText = found[2].trim();
-                    document.getElementById('resStatus').innerText = found[3].trim();
-                    document.getElementById('resTahun').innerText = (found[4] || '2024').trim();
+                    document.getElementById('resNama').innerText = found[1] || "-";
+                    document.getElementById('resStatus').innerText = found[3] || "-";
                     resArea.classList.remove('hidden');
-                } else {
-                    errorArea.classList.remove('hidden');
+                } else { 
+                    alert("Data tidak ditemukan."); 
+                    resArea.classList.add('hidden'); 
                 }
-            } catch (error) {
-                console.error(error);
-                alert("Gagal memuat data.");
+            } catch (e) { 
+                alert("Gagal memuat data."); 
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Cari Data';
